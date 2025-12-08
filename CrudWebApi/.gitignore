@@ -1,0 +1,54 @@
+# Arquivos de Solução e Projeto
+###################################
+# Arquivos de usuário do Visual Studio
+*.suo
+*.user
+*.useros
+*.sln.docstates
+
+# Pastas de Build e Temporárias
+###################################
+# Pasta de saída da compilação
+[Bb]in/
+
+# Pasta de objetos intermediários da compilação
+[Oo]bj/
+
+# Arquivos de Testes (saída)
+TestResults/
+
+# Arquivos de Empacotamento/Publicação
+Publish/
+*.publishproj.local
+
+# Pastas e arquivos específicos do .NET Core
+###################################
+# Pacotes NuGet e cache
+.nuget/
+**/[Ee]xtensions/
+
+# Arquivos de configuração gerados automaticamente (com segredos)
+appsettings*.Development.json
+appsettings*.Staging.json
+
+# Diretórios de execução local do runtime
+.vs/
+.vscode/
+
+# Logs e arquivos temporários de dados
+*.log
+*.sqlite
+*.db
+
+# Arquivos do Entity Framework Core (Migrações, etc.)
+# É importante rastrear as migrações, mas o arquivo de snapshot pode ser ignorado
+[Mm]igrations/*.Designer.cs
+[Mm]igrations/*.cs
+
+# Node.js/Frontend (se estiver usando)
+###################################
+# Pasta de pacotes do npm
+node_modules/
+
+# Arquivos gerados pelo Typescript
+*.js.map
