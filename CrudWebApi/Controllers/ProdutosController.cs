@@ -15,6 +15,12 @@ namespace CrudWebApi.Controllers
             _context = context;
         }
 
+        //metodo auxiliar para verificar se o produto existe
+        private bool ProdutoExists(int id)
+        {
+            return _context.Produtos.Any(e => e.Id == id);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProdutoModel>>> GetProdutos()
         {
@@ -54,5 +60,35 @@ namespace CrudWebApi.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProduto(int id, ProdutoModel produto)
+        {
+            if (id != produto.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(produto).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProdutoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+
+     
     }
 }
