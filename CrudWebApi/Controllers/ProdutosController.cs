@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CrudWebApi.Data;
 using CrudWebApi.Models;
 using Microsoft.EntityFrameworkCore;
+using CrudWebApi.Repository;
 
 namespace CrudWebApi.Controllers
 {
@@ -9,86 +10,66 @@ namespace CrudWebApi.Controllers
     [Route("api/[controller]")]
     public class ProdutosController : ControllerBase
     {
-        private readonly BancoContext _context;
-        public ProdutosController(BancoContext context)
+        private readonly IProdutoRepository _produtoRepository;
+        public ProdutosController(IProdutoRepository produtoRepository)
         {
-            _context = context;
+            _produtoRepository = produtoRepository;
+
         }
 
-        //metodo auxiliar para verificar se o produto existe
-        private bool ProdutoExists(int id)
-        {
-            return _context.Produtos.Any(e => e.Id == id);
-        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProdutoModel>>> GetProdutos()
         {
-            return await _context.Produtos.ToListAsync();
+            var produtos = await _produtoRepository.BuscarTodosProdutos();
+            return Ok(produtos);
         }
 
         [HttpPost]
         public async Task<ActionResult<ProdutoModel>> PostProduto(ProdutoModel produto)
         {
-            _context.Produtos.Add(produto);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetProdutos), new { id = produto.Id }, produto);
+           var produtos = await _produtoRepository.AdicionarProduto(produto);
+            return CreatedAtAction("GetProduto", new { id = produto.Id }, produto);
+
         }
 
         [HttpGet("{Id}")]
         public async Task<ActionResult<ProdutoModel>> GetProduto(int Id)
         {
-            var produto = await _context.Produtos.FindAsync(Id);
-            if (produto == null)
+        var produtos = await _produtoRepository.BuscarProdutoPorId(Id);
+            if (produtos == null)
             {
                 return NotFound();
             }
-            return produto;
-
+            return Ok(produtos);
         }
 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduto(int id)
         {
-            var produto = await _context.Produtos.FindAsync(id);
-            if (produto == null)
+          var produtos = await _produtoRepository.DeletarProduto(id);
+            if (!produtos)
             {
                 return NotFound();
             }
-            _context.Produtos.Remove(produto);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return NoContent(); 
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduto(int id, ProdutoModel produto)
         {
-            if (id != produto.Id)
+        var produtos = await _produtoRepository.BuscarProdutoPorId(id);
+            if (produtos == null)
             {
-                return BadRequest();
+                return NotFound();
             }
+            produtos.Nome = produto.Nome;
+            produtos.Preco = produto.Preco;
+            produtos.Estoque = produto.Estoque;
+            await _produtoRepository.AtualizarProduto(produtos);
+            return NoContent(); 
 
-            _context.Entry(produto).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProdutoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
         }
-
-     
     }
 }

@@ -30,11 +30,10 @@ namespace CrudWebApi.Repository
             return produto;
         }
 
-        public async Task<ProdutoModel> AtualizarProduto(ProdutoModel produto)
+        public async Task AtualizarProduto(ProdutoModel produto)
         {
             _context.Produtos.Update(produto);
             await _context.SaveChangesAsync();
-            return produto;
         }
 
         public async Task<bool> DeletarProduto(int id)

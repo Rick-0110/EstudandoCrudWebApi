@@ -6,8 +6,8 @@ namespace CrudWebApi.Repository
     {
         Task<IEnumerable<ProdutoModel>> BuscarTodosProdutos();
         Task<ProdutoModel> BuscarProdutoPorId(int id);
-        Task<ProdutoModel> AdicionarProduto(ProdutoModel produto);
-        Task<ProdutoModel> AtualizarProduto(ProdutoModel produto);
-        Task<bool> DeletarProduto(int id);
+        Task<ProdutoModel> AdicionarProduto(ProdutoModel produto); 
+        Task AtualizarProduto(ProdutoModel produto);
+        Task<bool> DeletarProduto(int id); 
     }
 }

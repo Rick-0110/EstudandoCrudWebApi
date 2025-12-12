@@ -1,3 +1,5 @@
+using CrudWebApi;
+using CrudWebApi.Repository;
 using CrudWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +13,8 @@ builder.Services.AddDbContext<CrudWebApi.Data.BancoContext>(options =>
    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
